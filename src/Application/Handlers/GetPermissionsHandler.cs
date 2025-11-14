@@ -47,13 +47,11 @@ public class GetPermissionsHandler : IRequestHandler<GetPermissionsQuery, IEnume
     {
         try
         {
-            // Index all in Elasticsearch (opcional)
             foreach (var dto in permissionDtos)
             {
                 await _elasticsearchService.IndexPermissionAsync(dto);
             }
 
-            // Send Kafka message
             var operation = new OperationDto
             {
                 Id = Guid.NewGuid(),

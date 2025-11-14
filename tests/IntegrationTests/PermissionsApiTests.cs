@@ -2,6 +2,7 @@ using System.Net.Http.Json;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using PermissionManagement.Application.Commands;
 using PermissionManagement.Application.DTOs;
 using PermissionManagement.Infrastructure.Data;
 using PermissionManagementSystem;
@@ -58,11 +59,12 @@ public class PermissionsApiTests : IClassFixture<WebApplicationFactory<Program>>
     [Fact]
     public async Task RequestPermission_ReturnsCreatedPermission()
     {
-        var command = new
+        var command = new RequestPermissionCommand
         {
-            nombreEmpleado = "João",
-            apellidoEmpleado = "Silva",
-            tipoPermiso = 1
+            NombreEmpleado = "João",
+            ApellidoEmpleado = "Silva",
+            TipoPermiso = 1,
+            FechaPermiso = DateTime.Now,
         };
 
         var response = await _client.PostAsJsonAsync("/api/permissions/request", command);
@@ -76,25 +78,27 @@ public class PermissionsApiTests : IClassFixture<WebApplicationFactory<Program>>
     [Fact]
     public async Task ModifyPermission_ReturnsUpdatedPermission()
     {
-        var createCommand = new
+        var createCommand = new RequestPermissionCommand
         {
-            nombreEmpleado = "Maria",
-            apellidoEmpleado = "Santos",
-            tipoPermiso = 2
+            NombreEmpleado = "Maria",
+            ApellidoEmpleado = "Santos",
+            TipoPermiso = 2,
+            FechaPermiso = DateTime.Now,
         };
 
         var createResponse = await _client.PostAsJsonAsync("/api/permissions/request", createCommand);
         var created = await createResponse.Content.ReadFromJsonAsync<PermissionDto>();
 
-        var modifyCommand = new
+        var modifyCommand = new ModifyPermissionCommand
         {
-            id = created!.Id,
-            nombreEmpleado = "Maria Modificada",
-            apellidoEmpleado = "Santos Silva",
-            tipoPermiso = 3
+            Id = created!.Id,
+            NombreEmpleado = "Maria Modificada",
+            ApellidoEmpleado = "Santos Silva",
+            TipoPermiso = 3,
+            FechaPermiso = DateTime.Now,
         };
 
-        var response = await _client.PutAsJsonAsync($"/api/permissions/modify/{modifyCommand.id}", modifyCommand);
+        var response = await _client.PutAsJsonAsync($"/api/permissions/modify/{modifyCommand.Id}", modifyCommand);
         response.EnsureSuccessStatusCode();
 
         var modified = await response.Content.ReadFromJsonAsync<PermissionDto>();

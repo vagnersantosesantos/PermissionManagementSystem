@@ -51,7 +51,7 @@ namespace PermissionManagement.Tests.Handlers
                 Id = 1,
                 NombreEmpleado = "Maria",
                 ApellidoEmpleado = "Santos",
-                TipoPermiso = 2,
+                TipoPermiso = 1,
                 FechaPermiso = DateTime.UtcNow
             };
 
@@ -66,7 +66,7 @@ namespace PermissionManagement.Tests.Handlers
             Assert.Equal(command.Id, result.Id);
             Assert.Equal("Maria", result.NombreEmpleado);
             Assert.Equal("Santos", result.ApellidoEmpleado);
-            Assert.Equal(2, result.TipoPermiso);
+            Assert.Equal(1, result.TipoPermiso);
 
             _permissionRepoMock.Verify(r => r.UpdateAsync(It.IsAny<Permission>()), Times.Once);
             _unitOfWorkMock.Verify(u => u.SaveChangesAsync(), Times.Once);
@@ -85,11 +85,12 @@ namespace PermissionManagement.Tests.Handlers
             {
                 Id = 99,
                 NombreEmpleado = "Inexistente",
-                ApellidoEmpleado = "Teste"
+                ApellidoEmpleado = "Teste",
+                FechaPermiso = DateTime.Now,
             };
 
             // Act & Assert
-            await Assert.ThrowsAsync<KeyNotFoundException>(() =>
+            await Assert.ThrowsAsync<ArgumentException>(() =>
                 _handler.Handle(command, CancellationToken.None));
 
             _permissionRepoMock.Verify(r => r.UpdateAsync(It.IsAny<Permission>()), Times.Never);

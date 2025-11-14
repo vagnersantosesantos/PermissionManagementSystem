@@ -33,10 +33,6 @@ public class RequestPermissionHandler : IRequestHandler<RequestPermissionCommand
             throw new ArgumentException(errors);
         }
 
-        var permissionType = await _unitOfWork.Permissions.GetByIdAsync(request.TipoPermiso);
-        if (permissionType == null)
-            throw new ArgumentException($"El tipo de permiso {request.TipoPermiso} no existe en el sistema.");
-
         var permission = new Permission
         {
             NombreEmpleado = request.NombreEmpleado,

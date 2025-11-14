@@ -33,7 +33,6 @@ public class ModifyPermissionHandler : IRequestHandler<ModifyPermissionCommand, 
             throw new ArgumentException(errors);
         }
 
-        // Validações de regra de negócio
         var permission = await _unitOfWork.Permissions.GetByIdAsync(request.Id);
         if (permission == null)
             throw new KeyNotFoundException($"Permiso con ID {request.Id} no encontrado.");
@@ -69,7 +68,6 @@ public class ModifyPermissionHandler : IRequestHandler<ModifyPermissionCommand, 
     {
         try
         {
-            // Update in Elasticsearch
             var permissionDto = new PermissionDto
             {
                 Id = permission.Id,
@@ -81,7 +79,6 @@ public class ModifyPermissionHandler : IRequestHandler<ModifyPermissionCommand, 
 
             await _elasticsearchService.IndexPermissionAsync(permissionDto);
 
-            // Send Kafka message
             var operation = new OperationDto
             {
                 Id = Guid.NewGuid(),

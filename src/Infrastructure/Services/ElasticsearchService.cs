@@ -20,7 +20,7 @@ public class ElasticsearchService : IElasticsearchService
     {
         if (_elasticClient == null)
         {
-            Console.WriteLine("Elasticsearch client não configurado.");
+            Console.WriteLine("Cliente de Elasticsearch no configurado.");
             return false;
         }
 
@@ -38,22 +38,22 @@ public class ElasticsearchService : IElasticsearchService
 
                 if (!createIndexResponse.IsValid)
                 {
-                    Console.WriteLine($"Elasticsearch: Falha ao criar índice. Erro: {createIndexResponse.ServerError?.Error?.Reason}");
+                    Console.WriteLine($" Elasticsearch: Error al crear índice. Error: {createIndexResponse.ServerError?.Error?.Reason}");
                     return false;
                 }
 
-                Console.WriteLine($"Elasticsearch: Índice '{IndexName}' criado com sucesso!");
+                Console.WriteLine($"Elasticsearch: Índice '{IndexName}' creado con éxito.");
             }
             else
             {
-                Console.WriteLine($"Elasticsearch: Índice '{IndexName}' já existe.");
+                Console.WriteLine($"Elasticsearch: Índice '{IndexName}' ya existe.");
             }
 
             return true;
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Elasticsearch não disponível: {ex.Message}");
+            Console.WriteLine($"Elasticsearch no disponible: {ex.Message}");
             return false;
         }
     }
@@ -62,7 +62,7 @@ public class ElasticsearchService : IElasticsearchService
     {
         if (!_isAvailable || _elasticClient == null)
         {
-            Console.WriteLine($"Elasticsearch não disponível. Permissão não indexada: {permission.NombreEmpleado} {permission.ApellidoEmpleado}");
+            Console.WriteLine($"Elasticsearch no disponible. Permiso no indexado: {permission.NombreEmpleado} {permission.ApellidoEmpleado}");
             return;
         }
 
@@ -72,16 +72,16 @@ public class ElasticsearchService : IElasticsearchService
 
             if (response.IsValid)
             {
-                Console.WriteLine($"Permissão indexada no Elasticsearch: {permission.NombreEmpleado} {permission.ApellidoEmpleado}");
+                Console.WriteLine($"Permiso indexado en Elasticsearch: {permission.NombreEmpleado} {permission.ApellidoEmpleado}");
             }
             else
             {
-                Console.WriteLine($"Falha ao indexar no Elasticsearch: {response.ServerError?.Error?.Reason}");
+                Console.WriteLine($"Error al indexar en Elasticsearch: {response.ServerError?.Error?.Reason}");
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Erro ao indexar no Elasticsearch (operação continua): {ex.Message}");
+            Console.WriteLine($"Error al indexar en Elasticsearch (la operación continúa): {ex.Message}");
         }
     }
 
@@ -89,7 +89,7 @@ public class ElasticsearchService : IElasticsearchService
     {
         if (!_isAvailable || _elasticClient == null)
         {
-            Console.WriteLine("Elasticsearch não disponível para busca.");
+            Console.WriteLine("Elasticsearch no disponible para búsqueda.");
             return Enumerable.Empty<PermissionDto>();
         }
 
@@ -108,11 +108,16 @@ public class ElasticsearchService : IElasticsearchService
                 )
             );
 
+            if (searchResponse.IsValid)
+            {
+                Console.WriteLine($"Búsqueda en Elasticsearch exitosa. Resultados: {searchResponse.Documents.Count}");
+            }
+
             return searchResponse.Documents;
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Erro ao buscar no Elasticsearch: {ex.Message}");
+            Console.WriteLine($"Error al buscar en Elasticsearch: {ex.Message}");
             return Enumerable.Empty<PermissionDto>();
         }
     }

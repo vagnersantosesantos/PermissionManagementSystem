@@ -27,24 +27,18 @@ public class PermissionsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<PermissionDto>> RequestPermission([FromBody] CreatePermissionDto dto)
     {
-        try
-        {
-            var command = new RequestPermissionCommand
-            {
-                NombreEmpleado = dto.NombreEmpleado,
-                ApellidoEmpleado = dto.ApellidoEmpleado,
-                TipoPermiso = dto.TipoPermiso,
-                FechaPermiso = dto.FechaPermiso
-            };
 
-            var result = await _mediator.Send(command);
-            return CreatedAtAction(nameof(GetPermissions), new { id = result.Id }, result);
-        }
-        catch (Exception ex)
+        var command = new RequestPermissionCommand
         {
-            _logger.LogError(ex, "Error requesting permission");
-            return BadRequest(new { error = ex.Message });
-        }
+            NombreEmpleado = dto.NombreEmpleado,
+            ApellidoEmpleado = dto.ApellidoEmpleado,
+            TipoPermiso = dto.TipoPermiso,
+            FechaPermiso = dto.FechaPermiso
+        };
+
+        var result = await _mediator.Send(command);
+        return CreatedAtAction(nameof(GetPermissions), new { id = result.Id }, result);
+
     }
 
     /// <summary>
@@ -56,30 +50,18 @@ public class PermissionsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<PermissionDto>> ModifyPermission(int id, [FromBody] UpdatePermissionDto dto)
     {
-        try
-        {
-            var command = new ModifyPermissionCommand
-            {
-                Id = id,
-                NombreEmpleado = dto.NombreEmpleado,
-                ApellidoEmpleado = dto.ApellidoEmpleado,
-                TipoPermiso = dto.TipoPermiso,
-                FechaPermiso = dto.FechaPermiso
-            };
 
-            var result = await _mediator.Send(command);
-            return Ok(result);
-        }
-        catch (KeyNotFoundException ex)
+        var command = new ModifyPermissionCommand
         {
-            _logger.LogWarning(ex, "Permission not found");
-            return NotFound(new { error = ex.Message });
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error modifying permission");
-            return BadRequest(new { error = ex.Message });
-        }
+            Id = id,
+            NombreEmpleado = dto.NombreEmpleado,
+            ApellidoEmpleado = dto.ApellidoEmpleado,
+            TipoPermiso = dto.TipoPermiso,
+            FechaPermiso = dto.FechaPermiso
+        };
+
+        var result = await _mediator.Send(command);
+        return Ok(result);
     }
 
     /// <summary>
@@ -89,16 +71,10 @@ public class PermissionsController : ControllerBase
     [ProducesResponseType(typeof(IEnumerable<PermissionDto>), StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<PermissionDto>>> GetPermissions()
     {
-        try
-        {
-            var query = new GetPermissionsQuery();
-            var result = await _mediator.Send(query);
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error getting permissions");
-            return BadRequest(new { error = ex.Message });
-        }
+
+        var query = new GetPermissionsQuery();
+        var result = await _mediator.Send(query);
+        return Ok(result);
+
     }
 }

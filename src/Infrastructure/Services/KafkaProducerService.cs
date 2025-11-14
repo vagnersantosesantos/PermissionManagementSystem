@@ -19,7 +19,7 @@ public class KafkaProducerService : IKafkaProducerService
     {
         if (_producer == null)
         {
-            Console.WriteLine($"Kafka não disponível. Operação não enviada: {operation.OperationName} (ID: {operation.Id})");
+            Console.WriteLine($"Kafka no disponible. Operación no enviada: {operation.OperationName} (ID: {operation.Id})");
             return;
         }
 
@@ -35,20 +35,20 @@ public class KafkaProducerService : IKafkaProducerService
 
             if (result.Status == PersistenceStatus.Persisted)
             {
-                Console.WriteLine($"Mensagem enviada ao Kafka: {operation.OperationName} (ID: {operation.Id})");
+                Console.WriteLine($"Mensaje enviado a Kafka: {operation.OperationName} (ID: {operation.Id})");
             }
             else
             {
-                Console.WriteLine($"Kafka - Status não persistido: {result.Status}");
+                Console.WriteLine($"Kafka - Estado no persistido: {result.Status}");
             }
         }
         catch (ProduceException<string, string> ex)
         {
-            Console.WriteLine($"Erro ao enviar ao Kafka (operação continua): {ex.Error.Reason}");
+            Console.WriteLine($"Error al enviar a Kafka (la operación continúa): {ex.Error.Reason}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Erro ao enviar ao Kafka (operação continua): {ex.Message}");
+            Console.WriteLine($"Error al enviar a Kafka (la operación continúa): {ex.Message}");
         }
     }
 }
